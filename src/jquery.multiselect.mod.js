@@ -45,7 +45,7 @@ $.widget("ech.multiselect", {
 	_create: function(){
 		var el = this.element.hide(),
 			o = this.options;
-		
+		this.namespaceID = multiselectID++;
 		this.speed = $.fx.speeds._default; // default speed for effects
 		this._isOpen = false; // assume no
 	
@@ -384,7 +384,7 @@ $.widget("ech.multiselect", {
 			});
 
 		// close each widget when clicking on any other element/anywhere else on the page
-		$(document).bind('mousedown.multiselect', function( e ){
+		$(document).bind('mousedown.multiselect' + self.namespaceID, function( e ){
 			if(self._isOpen && !$.contains(self.menu[0], e.target) && !$.contains(self.button[0], e.target) && e.target !== self.button[0]){
 				self.close();
 			}
@@ -626,7 +626,8 @@ $.widget("ech.multiselect", {
 		
 		this.button.remove();
 		this.menu.remove();
-		this.element.show();
+		$(document).unbind('mousedown.multiselect' + this.namespaceID);
+                this.element.show();
 		
 		return this;
 	},
